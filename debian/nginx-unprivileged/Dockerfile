@@ -98,21 +98,20 @@ FROM oidc-installer as nginx-config-update
 RUN sed -i 's,listen       80;,listen       8080;,' ${INSTALL_PATH}/etc/nginx/conf.d/frontend.conf \
     && sed -i '/user  nginx;/d' ${INSTALL_PATH}/etc/nginx/nginx.conf \
     && sed -i 's,/var/run/nginx.pid,${TMP_PATH}/nginx.pid,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "/^http {/a \    proxy_temp_path ${TMP_PATH}/proxy_temp;\n    client_body_temp_path ${TMP_PATH}/client_temp;\n    fastcgi_temp_path ${TMP_PATH}/fastcgi_temp;\n    uwsgi_temp_path ${TMP_PATH}/uwsgi_temp;\n    scgi_temp_path ${TMP_PATH}/scgi_temp;\n" ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "/^http {/a \    proxy_temp_path ${TMP_PATH}/proxy_temp;\n    client_body_temp_path ${TMP_PATH}/client_temp;\n    fastcgi_temp_path ${TMP_PATH}/fastcgi_temp;\n    uwsgi_temp_path ${TMP_PATH}/uwsgi_temp;\n    scgi_temp_path ${TMP_PATH}/scgi_temp;\n" ${INSTALL_PATH}/etc/nginx/nginx.conf
 
 FROM nginx-config-update as cleaner
 # cleanup sensitive nginx-plus data
 RUN apt-get autoremove --purge -y \
       gnupg \
       apt-transport-https \
-      lsb-release \
   && rm -rf /root/.gnupg \
   && rm -rf /var/lib/apt/lists/*
 
 FROM cleaner as runner
 # Forward request logs to Docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
+RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
+  && ln -sf /dev/stderr ${INSTALL_PATH}/var/log/nginx/error.log
 
 COPY entrypoint.sh /
 
