@@ -23,7 +23,8 @@ RUN --mount=type=secret,id=nginx-crt,dst=/etc/ssl/nginx/nginx-repo.crt,mode=0644
   \
   # Install prerequisites
   && yum -y update && yum -y upgrade \
-  && yum -y install epel-release ca-certificates wget curl vim procps gnupg binutils net-tools jq tcpdump git brotli libxslt \
+  && yum -y install epel-release \
+  && yum -y install wget ca-certificates epel-release curl sudo vim procps gnupg binutils net-tools jq tcpdump git brotli libxslt \
   && \
   found=''; \
   for server in \
