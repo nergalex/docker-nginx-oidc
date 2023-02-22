@@ -81,6 +81,9 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm \
     && chown -R nginx:nginx $INSTALL_PATH \
     && chmod -R g+w $INSTALL_PATH/etc/nginx \
+    && sudo mkdir /var/log/nginx \
+    && sudo touch /var/log/nginx/error.log \
+    && sudo chown -R nginx:nginx /var/log/nginx \
     \
     # Clean
     && rm -rf "${tempDir}" \
@@ -123,5 +126,5 @@ COPY entrypoint.sh /
 EXPOSE 8080
 EXPOSE 4443
 STOPSIGNAL SIGTERM
-USER nginx
+# USER nginx
 ENTRYPOINT ["bash", "/entrypoint.sh"]
