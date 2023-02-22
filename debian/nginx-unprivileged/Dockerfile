@@ -96,14 +96,14 @@ RUN cd /nginx/etc/nginx/conf.d \
 
 FROM oidc-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
-RUN sed -i 's,listen       80;,listen       8080;,' ${INSTALL_PATH}/etc/nginx/conf.d/frontend.conf \
-    && sed -i '/user  nginx;/d' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,/var/run/nginx.pid,${TMP_PATH}/nginx.pid,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i 's,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf
+RUN sed -i "s,listen       80;,listen       8080;," ${INSTALL_PATH}/etc/nginx/conf.d/frontend.conf \
+    && sed -i "/user  nginx;/d" ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,/var/run/nginx.pid,${TMP_PATH}/nginx.pid," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf
 
 FROM nginx-config-update as cleaner
 # cleanup sensitive nginx-plus data
