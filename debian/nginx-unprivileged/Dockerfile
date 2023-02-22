@@ -128,5 +128,5 @@ COPY entrypoint.sh /
 EXPOSE 8080
 EXPOSE 4443
 STOPSIGNAL SIGTERM
-# USER nginx
+USER nginx
 ENTRYPOINT ["bash", "/entrypoint.sh"]
