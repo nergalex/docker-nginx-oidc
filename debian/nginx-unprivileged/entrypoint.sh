@@ -17,7 +17,7 @@ trap 'handle_term' TERM
 
 # Launch nginx
 echo "starting nginx ..."
-${install_path}/usr/sbin/nginx -p ${install_path}/etc/nginx -g "daemon off; load_module modules/ngx_http_js_module.so;" &
+${install_path}/usr/sbin/nginx -p ${install_path}/etc/nginx -g "daemon off; load_module ${install_path}/usr/lib/nginx/modules/ngx_http_js_module.so;" &
 
 nginx_pid=$!
 
