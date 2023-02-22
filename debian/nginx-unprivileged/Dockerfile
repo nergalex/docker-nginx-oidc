@@ -94,7 +94,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
 
 FROM nginx-installer as oidc-installer
 # install OIDC
-RUN cd /nginx/etc/nginx/conf.d \
+RUN cd ${INSTALL_PATH}/etc/nginx/conf.d \
     && rm -rf * \
     && git clone --branch R${NGINX_PLUS_VERSION} https://github.com/nginxinc/nginx-openid-connect.git ${INSTALL_PATH}/etc/nginx/conf.d/
 
