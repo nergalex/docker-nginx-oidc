@@ -7,7 +7,8 @@ ARG NGINX_PLUS_VERSION=28
 ARG NGINX_PLUS_VERSION_MINOR=1
 ARG NJS_VERSION="0.7.10"
 ARG INSTALL_PATH="/nginx"
-ENV TMP_PATH "/nginx-tmp"
+ARG TMP_PATH="/nginx-tmp"
+ARG CACHE_PATH="/nginx-cache"
 
 # Download certificate and key from the customer portal (https://account.f5.com)
 # and copy to the build context
@@ -98,7 +99,11 @@ FROM oidc-installer as nginx-config-update
 RUN sed -i 's,listen       80;,listen       8080;,' ${INSTALL_PATH}/etc/nginx/conf.d/frontend.conf \
     && sed -i '/user  nginx;/d' ${INSTALL_PATH}/etc/nginx/nginx.conf \
     && sed -i 's,/var/run/nginx.pid,${TMP_PATH}/nginx.pid,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "/^http {/a \    proxy_temp_path ${TMP_PATH}/proxy_temp;\n    client_body_temp_path ${TMP_PATH}/client_temp;\n    fastcgi_temp_path ${TMP_PATH}/fastcgi_temp;\n    uwsgi_temp_path ${TMP_PATH}/uwsgi_temp;\n    scgi_temp_path ${TMP_PATH}/scgi_temp;\n" ${INSTALL_PATH}/etc/nginx/nginx.conf
+    && sed -i 's,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i 's,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i 's,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i 's,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i 's,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;,' ${INSTALL_PATH}/etc/nginx/nginx.conf
 
 FROM nginx-config-update as cleaner
 # cleanup sensitive nginx-plus data
