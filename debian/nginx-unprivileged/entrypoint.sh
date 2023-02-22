@@ -2,7 +2,7 @@
 #
 # This script launches nginx and OIDC module.
 #
-echo "------ version 2023.02.22.06 ------"
+echo "------ version 2023.02.22.07 ------"
 
 install_path="/nginx"
 

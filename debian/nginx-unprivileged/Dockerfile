@@ -120,8 +120,8 @@ RUN apt-get autoremove --purge -y \
 FROM cleaner as runner
 # Forward request logs to Docker log collector
 RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
-  && ln -sf /dev/stderr ${INSTALL_PATH}/var/log/nginx/error.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
+  && ln -sf /dev/stderr /var/log/nginx/error.log \
+  && ln -sf /dev/stderr ${INSTALL_PATH}/var/log/nginx/error.log
 
 COPY entrypoint.sh /
 
