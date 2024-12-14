@@ -80,7 +80,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && chmod +x ngxunprivinst.sh \
     \
 # Download and Install packages
-    && ./ngxunprivinst.sh fetch -c /etc/ssl/nginx/nginx-repo.crt -k /etc/ssl/nginx/nginx-repo.key -v ${NGINX_PLUS_VERSION}-${NGINX_PLUS_VERSION_MINOR} \
+    && ./ngxunprivinst.sh fetch -c /etc/ssl/nginx/nginx-repo.crt -k /etc/ssl/nginx/nginx-repo.key -v ${NGINX_VERSION}-${NGINX_VERSION_MINOR} \
     && mv nginx-plus_${NGINX_VERSION}* nginx-plus.rpm \
     && mv nginx-plus-module-brotli_${NGINX_VERSION}* nginx-plus-module-brotli.rpm \
     && mv nginx-plus-module-njs_${NGINX_VERSION}%2B${NJS_VERSION}-* nginx-plus-module-njs.rpm \
