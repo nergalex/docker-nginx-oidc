@@ -6,8 +6,10 @@ LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 # Define NGINX versions for NGINX Plus and NGINX Plus modules
 # Uncomment this block and the versioned nginxPackages block in the main RUN
 # instruction to install a specific release
+ARG RELEASE
+ARG NGINX_GPGKEY_PATH
 ENV NGINX_VERSION=33
-ENV NGINX_PKG_RELEASE=1~${RELEASE}
+ENV NGINX_PKG_RELEASE=2~${RELEASE}
 ENV NJS_VERSION=0.8.7
 ENV NJS_PKG_RELEASE=1~${RELEASE}
 ENV OTEL_VERSION=0.1.0
@@ -62,10 +64,9 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       curl  \
       gettext-base \
       gnupg2 \
-      ca-certificates \
-      lsb-release \
       debian-archive-keyring \
       brotli \
+      git \
 # Debug tools for Lab environment only
       vim  \
       binutils  \
@@ -75,19 +76,15 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       apt-utils \
       apt-transport-https \
       distro-info-data \
-      wget \
-    && apt-get remove --purge -y lsb-release \
-    && apt-get remove --purge --auto-remove -y && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx-plus.list \
-    && rm -rf /etc/apt/apt.conf.d/90nginx /etc/ssl/nginx
+      wget
 
 FROM nginx-installer as oidc-installer
-# install OIDC
 RUN cd /etc/nginx/conf.d \
     && rm -rf * \
     && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /etc/nginx/conf.d/
 
 FROM oidc-installer as nginx-agent-installer
-# Install nginx-agent
+ARG NGINX_GPGKEY_PATH
 RUN apt install nginx-agent
 
 FROM nginx-agent-installer as cleaner
@@ -97,9 +94,9 @@ RUN apt-get autoremove --purge -y \
       apt-transport-https \
   && rm -rf /root/.gnupg \
   && rm -rf /var/lib/apt/lists/* \
-  && rm -rf "${tempDir}" \
   && apt-get remove --purge -y lsb-release \
-  && apt-get remove --purge --auto-remove -y && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx-plus.list \
+  && apt-get remove --purge --auto-remove -y \
+  && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx-plus.list \
   && rm -rf /etc/apt/apt.conf.d/90nginx /etc/ssl/nginx
 
 FROM cleaner as runner
