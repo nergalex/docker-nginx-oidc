@@ -84,8 +84,8 @@ RUN cd /etc/nginx/conf.d \
     && rm -rf * \
     && mkdir -p /nginx-tmp/ \
     && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /nginx-tmp/ \
-    && mv /nginx-tmp/*.conf /etc/nginx/conf.d/
-    && mv /nginx-tmp/openid_connect.js /etc/nginx/conf.d/
+    && mv /nginx-tmp/*.conf /etc/nginx/conf.d/ \
+    && mv /nginx-tmp/openid_connect.js /etc/nginx/conf.d/ \
     && rm -rf /nginx-tmp
 
 FROM oidc-installer as nginx-agent-installer
