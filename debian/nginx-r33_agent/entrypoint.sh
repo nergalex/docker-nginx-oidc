@@ -50,7 +50,7 @@ wait_term()
     wait ${agent_pid}
     trap '' EXIT INT TERM
     kill -QUIT "${agent_pid}" 2>/dev/null
-    echo "waiting for nginx to stop..."
+    echo "waiting for nginx-agent to stop..."
     wait ${nginx_pid}
     trap '' EXIT INT TERM
     kill -QUIT "${nginx_pid}" 2>/dev/null
