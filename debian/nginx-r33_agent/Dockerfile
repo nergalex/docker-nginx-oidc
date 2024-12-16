@@ -76,7 +76,8 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       apt-utils \
       apt-transport-https \
       distro-info-data \
-      wget
+      wget \
+      procps
 
 FROM nginx-installer as oidc-installer
 RUN cd /etc/nginx/conf.d \
