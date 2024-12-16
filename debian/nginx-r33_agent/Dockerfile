@@ -67,6 +67,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       debian-archive-keyring \
       brotli \
       git \
+      procps \
 # Debug tools for Lab environment only
       vim  \
       binutils  \
@@ -76,13 +77,16 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       apt-utils \
       apt-transport-https \
       distro-info-data \
-      wget \
-      procps
+      wget
 
 FROM nginx-installer as oidc-installer
 RUN cd /etc/nginx/conf.d \
     && rm -rf * \
-    && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /etc/nginx/conf.d/
+    && mkdir -p /nginx-tmp/ \
+    && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /nginx-tmp/ \
+    && mv /nginx-tmp/*.conf /etc/nginx/conf.d/
+    && mv /nginx-tmp/openid_connect.js /etc/nginx/conf.d/
+    && rm -rf /nginx-tmp
 
 FROM oidc-installer as nginx-agent-installer
 ARG NGINX_GPGKEY_PATH
