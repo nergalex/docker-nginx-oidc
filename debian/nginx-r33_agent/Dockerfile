@@ -14,6 +14,9 @@ ENV NJS_VERSION=0.8.7
 ENV NJS_PKG_RELEASE=1~${RELEASE}
 ENV OTEL_VERSION=0.1.0
 ENV OTEL_PKG_RELEASE=1~${RELEASE}
+ARG TMP_PATH="/nginx-tmp"
+ARG CACHE_PATH="/nginx-cache"
+
 
 # Download your NGINX license certificate and key from the F5 customer portal (https://account.f5.com) and copy to the build context
 RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
@@ -94,7 +97,18 @@ RUN apt install nginx-agent \
     && chown :nginx-agent /var/run/nginx-agent \
     && usermod -a -G nginx-agent nginx
 
-FROM nginx-agent-installer as cleaner
+FROM nginx-agent-installer as nginx-config-update
+# implement changes required to run NGINX as an unprivileged user
+RUN sed -i "s,listen       80;,listen       8080;," /etc/nginx/conf.d/frontend.conf \
+    && sed -i "/user  nginx;/d" /etc/nginx/nginx.conf \
+    && sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," /etc/nginx/nginx.conf \
+    && sed -i "s,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;," /etc/nginx/nginx.conf \
+    && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," /etc/nginx/nginx.conf \
+    && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," /etc/nginx/nginx.conf \
+    && sed -i "s,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;," /etc/nginx/nginx.conf \
+    && sed -i "s,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;," /etc/nginx/nginx.conf
+
+FROM nginx-config-update as cleaner
 # cleanup sensitive nginx-plus data
 RUN apt-get autoremove --purge -y \
       gnupg \
