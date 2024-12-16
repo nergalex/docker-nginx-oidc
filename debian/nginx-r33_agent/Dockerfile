@@ -92,10 +92,11 @@ RUN cd /etc/nginx/conf.d \
     && rm -rf /nginx-tmp
 
 FROM oidc-installer as nginx-agent-installer
-ARG NGINX_GPGKEY_PATH
+COPY nginx-plus-api.conf /etc/nginx/conf.d/
 RUN apt install nginx-agent \
     && chown :nginx-agent /var/run/nginx-agent \
-    && usermod -a -G nginx-agent nginx
+    && usermod -a -G nginx-agent nginx \
+    && chmod -R g+w /etc/nginx
 
 FROM nginx-agent-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
