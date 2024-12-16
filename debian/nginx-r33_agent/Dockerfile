@@ -109,7 +109,7 @@ COPY entrypoint.sh /
 
 EXPOSE 8080
 EXPOSE 4443
-STOPSIGNAL SIGQUIT
+STOPSIGNAL SIGTERM
 ENTRYPOINT ["bash", "/entrypoint.sh"]
 
 

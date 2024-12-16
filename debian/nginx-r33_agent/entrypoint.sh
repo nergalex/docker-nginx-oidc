@@ -37,6 +37,7 @@ echo "NGINX_AGENT_SERVER_HOST: ${NGINX_AGENT_SERVER_HOST}"
 echo "NGINX_AGENT_TLS_ENABLE: ${NGINX_AGENT_TLS_ENABLE}"
 echo "NGINX_AGENT_SERVER_GRPCPORT: ${NGINX_AGENT_SERVER_GRPCPORT}"
 /usr/bin/nginx-agent &
+echo "nginx-agent started"
 
 agent_pid=$!
 
@@ -57,6 +58,7 @@ wait_term()
     echo "waiting for nginx to stop..."
 }
 
+echo "waiting for SIG TERM"
 wait_term
 
 echo "nginx process has stopped, exiting."
