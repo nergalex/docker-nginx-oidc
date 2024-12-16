@@ -4,8 +4,6 @@
 #
 echo "------ version 2024.12.15.01 ------"
 
-install_path="/nginx"
-
 handle_term()
 {
     echo "received TERM signal"
