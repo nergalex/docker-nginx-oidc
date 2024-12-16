@@ -90,7 +90,9 @@ RUN cd /etc/nginx/conf.d \
 
 FROM oidc-installer as nginx-agent-installer
 ARG NGINX_GPGKEY_PATH
-RUN apt install nginx-agent
+RUN apt install nginx-agent \
+    && chown :nginx-agent /var/run/nginx-agent \
+    && usermod -a -G nginx-agent nginx
 
 FROM nginx-agent-installer as cleaner
 # cleanup sensitive nginx-plus data
