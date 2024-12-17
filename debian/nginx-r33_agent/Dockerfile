@@ -101,9 +101,8 @@ RUN apt install nginx-agent \
 
 FROM nginx-agent-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
-#RUN sed -i "s,listen       80;,listen       8080;," /etc/nginx/conf.d/frontend.conf \
-#    && sed -i "/user  nginx;/d" /etc/nginx/nginx.conf \
-RUN sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," /etc/nginx/nginx.conf \
+RUN sed -i "s,listen       80;,listen       8080;," /etc/nginx/conf.d/default.conf \
+    && sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," /etc/nginx/nginx.conf \
     && sed -i "s,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;," /etc/nginx/nginx.conf \
     && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," /etc/nginx/nginx.conf \
     && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," /etc/nginx/nginx.conf \
