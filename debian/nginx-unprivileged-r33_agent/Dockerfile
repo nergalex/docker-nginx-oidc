@@ -122,9 +122,10 @@ RUN apt install nginx-agent \
     && sudo mkdir /var/log/nginx \
     && sudo touch /var/log/nginx/error.log \
     && sudo chown -R nginx:nginx-agent /var/log/nginx \
-    && touch /var/log/nginx-agent/agent.log \
-    && chown -R nginx:nginx-agent /var/log/nginx-agent \
-    && chmod -R g+rw /var/log/nginx-agent
+    && mkdir ${INSTALL_PATH}/var/log/nginx-agent/ \
+    && touch ${INSTALL_PATH}/var/log/nginx-agent/agent.log \
+    && chown -R nginx:nginx-agent ${INSTALL_PATH}/var/log/nginx-agent \
+    && chmod -R g+rw ${INSTALL_PATH}/var/log/nginx-agent
 
 FROM nginx-agent-installer as cleaner
 # cleanup sensitive nginx-plus data
@@ -141,7 +142,6 @@ RUN apt-get autoremove --purge -y \
 FROM cleaner as runner
 # Forward request logs to Docker log collector
 RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log \
   && ln -sf /dev/stderr ${INSTALL_PATH}/var/log/nginx/error.log \
   && ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx-agent/agent.log
 
