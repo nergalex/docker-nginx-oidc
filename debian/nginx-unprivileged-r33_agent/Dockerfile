@@ -90,12 +90,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mv nginx-plus-module-njs_${NGINX_VERSION}%2B${NJS_VERSION}-* nginx-plus-module-njs.rpm \
     && mv nginx-plus-module-subs-filter_${NGINX_VERSION}* nginx-plus-module-subs-filter.rpm \
     && mkdir -p $INSTALL_PATH \
-    && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm \
-    && chown -R nginx:nginx $INSTALL_PATH \
-    && chmod -R g+w $INSTALL_PATH/etc/nginx \
-    && sudo mkdir /var/log/nginx \
-    && sudo touch /var/log/nginx/error.log \
-    && sudo chown -R nginx:nginx /var/log/nginx
+    && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm
 
 FROM nginx-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
@@ -112,8 +107,11 @@ FROM nginx-config-update as nginx-agent-installer
 # Install nginx-agent
 RUN apt install nginx-agent \
     && usermod -a -G nginx-agent nginx \
-    && chown -R nginx:nginx-agent ${INSTALL_PATH}/etc/nginx \
-    && chmod -R g+w ${INSTALL_PATH}/etc/nginx \
+    && chown -R nginx:nginx-agent ${INSTALL_PATH} \
+    && chmod -R g+w ${INSTALL_PATH} \
+    && sudo mkdir /var/log/nginx \
+    && sudo touch /var/log/nginx/error.log \
+    && sudo chown -R nginx:nginx-agent /var/log/nginx \
     && mkdir ${INSTALL_PATH}/var/log/nginx-agent/ \
     && touch ${INSTALL_PATH}/var/log/nginx-agent/agent.log \
     && chown -R nginx:nginx-agent ${INSTALL_PATH}/var/log/nginx-agent \
