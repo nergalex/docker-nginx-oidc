@@ -82,16 +82,16 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
       distro-info-data \
       wget
 
-FROM nginx-installer as oidc-installer
-RUN cd /etc/nginx/conf.d \
-    && rm -rf * \
-    && mkdir -p /nginx-tmp/ \
-    && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /nginx-tmp/ \
-    && mv /nginx-tmp/*.conf /etc/nginx/conf.d/ \
-    && mv /nginx-tmp/openid_connect.js /etc/nginx/conf.d/ \
-    && rm -rf /nginx-tmp
+#FROM nginx-installer as oidc-installer
+#RUN cd /etc/nginx/conf.d \
+#    && rm -rf * \
+#    && mkdir -p /nginx-tmp/ \
+#    && git clone --branch R${NGINX_VERSION} https://github.com/nginxinc/nginx-openid-connect.git /nginx-tmp/ \
+#    && mv /nginx-tmp/*.conf /etc/nginx/conf.d/ \
+#    && mv /nginx-tmp/openid_connect.js /etc/nginx/conf.d/ \
+#    && rm -rf /nginx-tmp
 
-FROM oidc-installer as nginx-agent-installer
+FROM nginx-installer as nginx-agent-installer
 COPY nginx-plus-api.conf /etc/nginx/conf.d/
 RUN apt install nginx-agent \
     && chown :nginx-agent /var/run/nginx-agent \
@@ -101,9 +101,9 @@ RUN apt install nginx-agent \
 
 FROM nginx-agent-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
-RUN sed -i "s,listen       80;,listen       8080;," /etc/nginx/conf.d/frontend.conf \
-    && sed -i "/user  nginx;/d" /etc/nginx/nginx.conf \
-    && sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," /etc/nginx/nginx.conf \
+#RUN sed -i "s,listen       80;,listen       8080;," /etc/nginx/conf.d/frontend.conf \
+#    && sed -i "/user  nginx;/d" /etc/nginx/nginx.conf \
+RUN sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," /etc/nginx/nginx.conf \
     && sed -i "s,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;," /etc/nginx/nginx.conf \
     && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," /etc/nginx/nginx.conf \
     && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," /etc/nginx/nginx.conf \
