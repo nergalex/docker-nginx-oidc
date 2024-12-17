@@ -101,7 +101,8 @@ RUN sed -i "s,listen       80;,listen       8080;," ${INSTALL_PATH}/etc/nginx/co
     && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
     && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
     && sed -i "s,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf
+    && sed -i "s,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
+    && sed -i "s,uuid_file.*,mgmt { state_path ${INSTALL_PATH}/var/lib/nginx/state; }," ${INSTALL_PATH}/etc/nginx/nginx.conf
 
 FROM nginx-config-update as nginx-agent-installer
 # Install nginx-agent
