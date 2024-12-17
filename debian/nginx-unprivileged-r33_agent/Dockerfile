@@ -111,16 +111,19 @@ RUN sed -i "s,listen       80;,listen       8080;," ${INSTALL_PATH}/etc/nginx/co
 FROM nginx-config-update as nginx-agent-installer
 # Install nginx-agent
 RUN apt install nginx-agent \
+    && usermod -a -G nginx-agent nginx \
+    && chown -R nginx:nginx-agent ${INSTALL_PATH}/etc/nginx \
+    && chmod -R g+w ${INSTALL_PATH}/etc/nginx \
     && mkdir ${INSTALL_PATH}/var/log/nginx-agent/ \
     && touch ${INSTALL_PATH}/var/log/nginx-agent/agent.log \
-    && chown -R nginx:nginx ${INSTALL_PATH}/var/log/nginx-agent \
-    && chmod -R go+rw ${INSTALL_PATH}/var/log/nginx-agent \
-    && chown -R nginx:nginx /etc/nginx-agent/ \
-    && chmod -R go+w /etc/nginx-agent/ \
-    && chown -R nginx:nginx /var/run/nginx-agent \
-    && chmod -R go+w /var/run/nginx-agent \
+    && chown -R nginx:nginx-agent ${INSTALL_PATH}/var/log/nginx-agent \
+    && chmod -R g+rw ${INSTALL_PATH}/var/log/nginx-agent \
+    && chown -R nginx:nginx-agent /etc/nginx-agent/ \
+    && chmod -R g+w /etc/nginx-agent/ \
+    && chown -R nginx:nginx-agent /var/run/nginx-agent \
     && ln -s  ${INSTALL_PATH}/usr/lib/nginx /usr/lib/nginx \
-    && chown nginx:nginx /usr/lib/nginx
+    && chown nginx:nginx-agent /usr/lib/nginx
+    # && chmod -R go+w /var/run/nginx-agent \
 
 FROM nginx-agent-installer as cleaner
 # cleanup sensitive nginx-plus data

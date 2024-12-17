@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# This script launches nginx and OIDC module.
+# This script launches nginx and nginx-agent.
 #
-echo "------ version 2024.12.14.01 ------"
+echo "------ version 2024.12.17.01 ------"
 
 install_path="/nginx"
 
@@ -17,7 +17,7 @@ trap 'handle_term' TERM
 
 # Launch nginx
 echo "starting nginx ..."
-${install_path}/usr/sbin/nginx -p ${install_path}/etc/nginx -c ${install_path}/etc/nginx/nginx.conf -g "daemon off; load_module modules/ngx_http_js_module.so;" &
+${install_path}/usr/sbin/nginx -p ${install_path}/etc/nginx -c ${install_path}/etc/nginx/nginx.conf -g "daemon off;" &
 
 nginx_pid=$!
 
@@ -32,7 +32,15 @@ wait_workers()
 wait_workers
 
 # Launch nginx-agent
+echo "NGINX_AGENT_INSTANCE_GROUP: ${NGINX_AGENT_INSTANCE_GROUP}"
+echo "NGINX_AGENT_TAGS: ${NGINX_AGENT_TAGS}"
+echo "NGINX_AGENT_SERVER_TOKEN: ${NGINX_AGENT_SERVER_TOKEN}"
+echo "NGINX_AGENT_SERVER_HOST: ${NGINX_AGENT_SERVER_HOST}"
+echo "NGINX_AGENT_TLS_ENABLE: ${NGINX_AGENT_TLS_ENABLE}"
+echo "NGINX_AGENT_SERVER_GRPCPORT: ${NGINX_AGENT_SERVER_GRPCPORT}"
+echo "NGINX_AGENT_CONFIG_DIRS: ${NGINX_AGENT_CONFIG_DIRS}"
 /usr/bin/nginx-agent &
+echo "nginx-agent started"
 
 agent_pid=$!
 
@@ -43,16 +51,14 @@ fi
 
 wait_term()
 {
-    wait ${agent_pid}
-    trap '' EXIT INT TERM
-    kill -QUIT "${agent_pid}" 2>/dev/null
-    echo "waiting for nginx to stop..."
     wait ${nginx_pid}
     trap '' EXIT INT TERM
-    kill -QUIT "${nginx_pid}" 2>/dev/null
-    echo "waiting for nginx to stop..."
+    echo "nginx stopped"
+    echo "stopping nginx-agent ..."
+    kill -QUIT "${agent_pid}" 2>/dev/null
+    echo "nginx-agent stopped..."
 }
 
 wait_term
 
-echo "nginx process has stopped, exiting."
+echo "All process are stopped, exiting."
