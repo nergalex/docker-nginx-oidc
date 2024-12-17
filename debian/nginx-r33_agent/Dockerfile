@@ -96,7 +96,8 @@ COPY nginx-plus-api.conf /etc/nginx/conf.d/
 RUN apt install nginx-agent \
     && chown :nginx-agent /var/run/nginx-agent \
     && usermod -a -G nginx-agent nginx \
-    && chmod -R g+w /etc/nginx
+    && chmod -R g+w /etc/nginx \
+    && chgrp -R nginx-agent /etc/nginx
 
 FROM nginx-agent-installer as nginx-config-update
 # implement changes required to run NGINX as an unprivileged user
