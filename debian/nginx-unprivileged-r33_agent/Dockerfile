@@ -122,7 +122,6 @@ RUN apt install nginx-agent \
     && sudo mkdir /var/log/nginx \
     && sudo touch /var/log/nginx/error.log \
     && sudo chown -R nginx:nginx-agent /var/log/nginx \
-    && mkdir /var/log/nginx-agent/ \
     && touch /var/log/nginx-agent/agent.log \
     && chown -R nginx:nginx-agent /var/log/nginx-agent \
     && chmod -R g+rw /var/log/nginx-agent
