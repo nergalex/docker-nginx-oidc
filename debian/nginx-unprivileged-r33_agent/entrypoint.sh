@@ -8,8 +8,8 @@ install_path="/nginx"
 
 handle_term()
 {
-    echo "`date`: received TERM signal"
-    echo "`date`: stopping nginx ..."
+    echo "`date +%H:%M:%S:%N`: received TERM signal"
+    echo "`date +%H:%M:%S:%N`: stopping nginx ..."
     kill -TERM "${nginx_pid}" 2>/dev/null
 }
 
