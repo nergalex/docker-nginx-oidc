@@ -8,8 +8,8 @@ install_path="/nginx"
 
 handle_term()
 {
-    echo "received TERM signal"
-    echo "stopping nginx ..."
+    echo "`date`: received TERM signal"
+    echo "`date`: stopping nginx ..."
     kill -TERM "${nginx_pid}" 2>/dev/null
 }
 
@@ -53,17 +53,17 @@ wait_term()
 {
     wait ${nginx_pid}
     trap '' EXIT INT TERM
-    echo "nginx stopped"
-    echo "stopping nginx-agent ..."
+    echo "`date`: nginx stopped"
+    echo "`date`: stopping nginx-agent ..."
     kill -QUIT "${agent_pid}" 2>/dev/null
-    echo "nginx-agent stopped..."
-    echo "waiting for NGINX One to set the instance Offline..."
-    echo "unregistering nginx-agent..."
+    echo "`date`: nginx-agent stopped..."
+    echo "`date`: waiting for NGINX One to set the instance Offline..."
+    echo "`date`: unregistering nginx-agent..."
     export XC_API_KEY="${XC_API_KEY}"
     export XC_TENANT="${XC_TENANT}"
     sh remove.sh
-    echo "nginx-agent unregistered"
+    echo "`date`: nginx-agent unregistered"
 }
 
 wait_term
-echo "exiting."
+echo "`date`:exiting."
