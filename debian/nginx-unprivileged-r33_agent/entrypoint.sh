@@ -59,8 +59,8 @@ wait_term()
     echo "`date`: nginx-agent stopped..."
     echo "`date`: waiting for NGINX One to set the instance Offline..."
     echo "`date`: unregistering nginx-agent..."
-    export XC_API_KEY="${XC_API_KEY}"
-    export XC_TENANT="${XC_TENANT}"
+    export XC_API_KEY
+    export XC_TENANT
     sh remove.sh
     echo "`date`: nginx-agent unregistered"
 }
