@@ -9,7 +9,7 @@ install_path="/nginx"
 handle_term()
 {
     echo "`date +%H:%M:%S:%N`: received TERM signal"
-    echo "`date +%H:%M:%S:%N`: stopping nginx ..."
+    # stopping nginx ...
     kill -TERM "${nginx_pid}" 2>/dev/null
 }
 
@@ -32,13 +32,6 @@ wait_workers()
 wait_workers
 
 # Launch nginx-agent
-echo "NGINX_AGENT_INSTANCE_GROUP: ${NGINX_AGENT_INSTANCE_GROUP}"
-echo "NGINX_AGENT_TAGS: ${NGINX_AGENT_TAGS}"
-echo "NGINX_AGENT_SERVER_TOKEN: ${NGINX_AGENT_SERVER_TOKEN}"
-echo "NGINX_AGENT_SERVER_HOST: ${NGINX_AGENT_SERVER_HOST}"
-echo "NGINX_AGENT_TLS_ENABLE: ${NGINX_AGENT_TLS_ENABLE}"
-echo "NGINX_AGENT_SERVER_GRPCPORT: ${NGINX_AGENT_SERVER_GRPCPORT}"
-echo "NGINX_AGENT_CONFIG_DIRS: ${NGINX_AGENT_CONFIG_DIRS}"
 /usr/bin/nginx-agent &
 echo "nginx-agent started"
 
@@ -54,11 +47,10 @@ wait_term()
     wait ${nginx_pid}
     trap '' EXIT INT TERM
     echo "`date +%H:%M:%S:%N`: nginx stopped"
-    echo "`date +%H:%M:%S:%N`: stopping nginx-agent ..."
+    # stopping nginx-agent ...
     kill -QUIT "${agent_pid}" 2>/dev/null
     echo "`date +%H:%M:%S:%N`: nginx-agent stopped..."
-    echo "`date +%H:%M:%S:%N`: waiting for NGINX One to set the instance Offline..."
-    echo "`date +%H:%M:%S:%N`: unregistering nginx-agent..."
+    # echo "`date +%H:%M:%S:%N`: waiting for NGINX One to set the instance Offline..."
     export XC_API_KEY
     export XC_TENANT
     sh remove.sh
