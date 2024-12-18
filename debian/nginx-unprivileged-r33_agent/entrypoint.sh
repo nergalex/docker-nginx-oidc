@@ -2,7 +2,7 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2024.12.17.01 ------"
+echo "------ version 2024.12.18.01 ------"
 
 install_path="/nginx"
 
@@ -57,8 +57,15 @@ wait_term()
     echo "stopping nginx-agent ..."
     kill -QUIT "${agent_pid}" 2>/dev/null
     echo "nginx-agent stopped..."
+    echo "waiting for NGINX One to set the instance Offline..."
+    sleep 1
+    echo "unregistering nginx-agent..."
+    export XC_API_KEY="${XC_API_KEY}"
+    export XC_TENANT="${XC_TENANT}"
+    sh remove.sh
+    echo "nginx-agent unregistered"
 }
 
 wait_term
 
-echo "All process are stopped, exiting."
+echo "exiting."
