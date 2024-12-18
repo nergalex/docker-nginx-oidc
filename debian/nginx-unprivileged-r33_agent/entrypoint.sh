@@ -53,16 +53,16 @@ wait_term()
 {
     wait ${nginx_pid}
     trap '' EXIT INT TERM
-    echo "`date`: nginx stopped"
-    echo "`date`: stopping nginx-agent ..."
+    echo "`date +%H:%M:%S:%N`: nginx stopped"
+    echo "`date +%H:%M:%S:%N`: stopping nginx-agent ..."
     kill -QUIT "${agent_pid}" 2>/dev/null
-    echo "`date`: nginx-agent stopped..."
-    echo "`date`: waiting for NGINX One to set the instance Offline..."
-    echo "`date`: unregistering nginx-agent..."
+    echo "`date +%H:%M:%S:%N`: nginx-agent stopped..."
+    echo "`date +%H:%M:%S:%N`: waiting for NGINX One to set the instance Offline..."
+    echo "`date +%H:%M:%S:%N`: unregistering nginx-agent..."
     export XC_API_KEY
     export XC_TENANT
     sh remove.sh
-    echo "`date`: nginx-agent unregistered"
+    echo "`date +%H:%M:%S:%N`: nginx-agent unregistered"
 }
 
 wait_term
