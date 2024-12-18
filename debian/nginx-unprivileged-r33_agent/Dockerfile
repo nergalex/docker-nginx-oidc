@@ -110,10 +110,6 @@ RUN apt install nginx-agent \
     && usermod -a -G nginx-agent nginx \
     && chown -R nginx:nginx-agent ${INSTALL_PATH} \
     && chmod -R g+w ${INSTALL_PATH} \
-    && ln -s  ${INSTALL_PATH}/usr/lib/nginx /usr/lib/nginx \
-    && chown nginx:nginx-agent /usr/lib/nginx \
-    && ln -s  ${INSTALL_PATH}/var/lib/nginx /var/lib/nginx \
-    && chown nginx:nginx-agent /var/lib/nginx \
     && chown -R nginx:nginx-agent /etc/nginx-agent/ \
     && chmod -R g+w /etc/nginx-agent/ \
     && chown -R nginx:nginx-agent /var/run/nginx-agent  \
