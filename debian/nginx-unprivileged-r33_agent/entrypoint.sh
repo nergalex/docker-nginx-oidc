@@ -67,3 +67,4 @@ wait_term()
 
 wait_term
 echo "`date`:exiting."
+sleep 30
