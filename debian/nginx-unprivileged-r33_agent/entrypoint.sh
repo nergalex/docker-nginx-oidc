@@ -58,7 +58,7 @@ wait_term()
     kill -QUIT "${agent_pid}" 2>/dev/null
     echo "nginx-agent stopped..."
     echo "waiting for NGINX One to set the instance Offline..."
-    sleep 1
+    sleep 5
     echo "unregistering nginx-agent..."
     export XC_API_KEY="${XC_API_KEY}"
     export XC_TENANT="${XC_TENANT}"
@@ -67,5 +67,5 @@ wait_term()
 }
 
 wait_term
-
+sleep 15
 echo "exiting."
