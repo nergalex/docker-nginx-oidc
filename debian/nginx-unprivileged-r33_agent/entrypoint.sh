@@ -2,7 +2,7 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2024.12.19.02 ------"
+echo "------ version 2024.12.19.03 ------"
 
 install_path="/nginx"
 mv -f /nginx-initial-config/* ${install_path}/etc/nginx/*
