@@ -107,6 +107,10 @@ RUN sed -i "s,listen       80;,listen       8080;," ${INSTALL_PATH}/etc/nginx/co
 FROM nginx-config-update as nginx-agent-installer
 # Install nginx-agent
 RUN apt install nginx-agent \
+    && mkdir -p /nginx-initial-config \
+    && cp ${INSTALL_PATH}/etc/nginx/nginx.conf /nginx-initial-config/ \
+    && chmod -R g+w /nginx-initial-config/ \
+    && chown -R nginx:nginx-agent /nginx-initial-config/ \
     && usermod -a -G nginx-agent nginx \
     && chown -R nginx:nginx-agent ${INSTALL_PATH} \
     && chmod -R g+w ${INSTALL_PATH} \
@@ -145,8 +149,12 @@ RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
 COPY entrypoint.sh /
 COPY remove.sh /
 
-EXPOSE 8080
+EXPOSE 8000
 EXPOSE 4443
+# NGINX API
+EXPOSE 8080
+# NGINX-agent API
+EXPOSE 8032
 STOPSIGNAL SIGTERM
 USER nginx
 ENTRYPOINT ["bash", "/entrypoint.sh"]

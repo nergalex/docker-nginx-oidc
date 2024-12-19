@@ -5,6 +5,7 @@
 echo "------ version 2024.12.18.01 ------"
 
 install_path="/nginx"
+mv -f /nginx-initial-config/ ${install_path}/etc/nginx/nginx.conf
 
 handle_term()
 {
