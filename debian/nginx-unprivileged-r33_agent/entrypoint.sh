@@ -6,7 +6,7 @@ echo "------ version 2024.12.19.05 ------"
 
 install_path="/nginx"
 
-# move initial file to the empy volume, in case of being empty
+# copy initial file to the empy volume, in case of being empty
 cp -pf /nginx-initial-config/conf.d ${install_path}/etc/nginx/conf.d
 cp -pf /nginx-initial-config/modules ${install_path}/etc/nginx/modules
 cp -pf /nginx-initial-config/uwsgi_params ${install_path}/etc/nginx/uwsgi_params
