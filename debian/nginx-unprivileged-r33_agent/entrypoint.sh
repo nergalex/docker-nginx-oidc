@@ -2,18 +2,18 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2024.12.19.04 ------"
+echo "------ version 2024.12.19.05 ------"
 
 install_path="/nginx"
 
-# move initial file to the empy volume, if empty
-mv -f /nginx-initial-config/conf.d ${install_path}/etc/nginx/conf.d
-mv -f /nginx-initial-config/modules ${install_path}/etc/nginx/modules
-mv -f /nginx-initial-config/uwsgi_params ${install_path}/etc/nginx/uwsgi_params
-mv -f /nginx-initial-config/fastcgi_params ${install_path}/etc/nginx/fastcgi_params
-mv -f /nginx-initial-config/mime.types ${install_path}/etc/nginx/mime.types
-mv -f /nginx-initial-config/nginx.conf ${install_path}/etc/nginx/nginx.conf
-mv -f /nginx-initial-config/scgi_params ${install_path}/etc/nginx/scgi_params
+# move initial file to the empy volume, in case of being empty
+cp -pf /nginx-initial-config/conf.d ${install_path}/etc/nginx/conf.d
+cp -pf /nginx-initial-config/modules ${install_path}/etc/nginx/modules
+cp -pf /nginx-initial-config/uwsgi_params ${install_path}/etc/nginx/uwsgi_params
+cp -pf /nginx-initial-config/fastcgi_params ${install_path}/etc/nginx/fastcgi_params
+cp -pf /nginx-initial-config/mime.types ${install_path}/etc/nginx/mime.types
+cp -pf /nginx-initial-config/nginx.conf ${install_path}/etc/nginx/nginx.conf
+cp -pf /nginx-initial-config/scgi_params ${install_path}/etc/nginx/scgi_params
 
 handle_term()
 {
