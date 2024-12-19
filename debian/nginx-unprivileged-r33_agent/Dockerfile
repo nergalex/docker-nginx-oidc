@@ -108,7 +108,7 @@ FROM nginx-config-update as nginx-agent-installer
 # Install nginx-agent
 RUN apt install nginx-agent \
     && mkdir -p /nginx-initial-config \
-    && cp -R ${INSTALL_PATH}/etc/nginx/ /nginx-initial-config/ \
+    && cp ${INSTALL_PATH}/etc/nginx/* /nginx-initial-config/ \
     && chmod -R g+w /nginx-initial-config/ \
     && chown -R nginx:nginx-agent /nginx-initial-config/ \
     && usermod -a -G nginx-agent nginx \
