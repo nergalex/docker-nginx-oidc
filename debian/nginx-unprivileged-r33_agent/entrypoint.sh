@@ -2,12 +2,12 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2024.12.19.05 ------"
+echo "------ version 2024.12.19.06 ------"
 
 install_path="/nginx"
 
 # copy initial file to the empy volume, in case of being empty
-cp -pf /nginx-initial-config/conf.d ${install_path}/etc/nginx/conf.d
+cp -prf /nginx-initial-config/conf.d ${install_path}/etc/nginx/conf.d
 cp -pf /nginx-initial-config/modules ${install_path}/etc/nginx/modules
 cp -pf /nginx-initial-config/uwsgi_params ${install_path}/etc/nginx/uwsgi_params
 cp -pf /nginx-initial-config/fastcgi_params ${install_path}/etc/nginx/fastcgi_params
