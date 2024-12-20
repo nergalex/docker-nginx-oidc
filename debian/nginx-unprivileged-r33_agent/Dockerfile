@@ -110,17 +110,17 @@ FROM nginx-config-update as nginx-agent-installer
 RUN apt install nginx-agent \
     && mkdir -p /nginx-initial-config \
     && cp -R ${INSTALL_PATH}/etc/nginx/* /nginx-initial-config/ \
-    && chmod -R g+w /nginx-initial-config/ \
+    && chmod -R go+w /nginx-initial-config/ \
     && chown -R nginx:nginx-agent /nginx-initial-config/ \
     && usermod -a -G nginx-agent nginx \
     && chown -R nginx:nginx-agent ${INSTALL_PATH} \
-    && chmod -R g+w ${INSTALL_PATH} \
+    && chmod -R go+w ${INSTALL_PATH} \
     && chown -R nginx:nginx-agent /etc/nginx-agent/ \
-    && chmod -R g+w /etc/nginx-agent/ \
+    && chmod -R go+w /etc/nginx-agent/ \
     && chown -R nginx:nginx-agent /var/run/nginx-agent  \
-    && chmod -R g+w /var/run/nginx-agent \
+    && chmod -R go+w /var/run/nginx-agent \
     && chown -R nginx:nginx-agent /var/lib/nginx-agent/ \
-    && chmod -R g+w /var/lib/nginx-agent/ \
+    && chmod -R go+w /var/lib/nginx-agent/ \
     && sudo mkdir /var/log/nginx \
     && sudo touch /var/log/nginx/error.log \
     && sudo chown -R nginx:nginx-agent /var/log/nginx \
