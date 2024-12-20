@@ -121,9 +121,10 @@ RUN apt install nginx-agent \
     && chmod -R go+rw /var/run/nginx-agent \
     && chown -R nginx:nginx-agent /var/lib/nginx-agent/ \
     && chmod -R go+rw /var/lib/nginx-agent/ \
-    && sudo mkdir /var/log/nginx \
-    && sudo touch /var/log/nginx/error.log \
-    && sudo chown -R nginx:nginx-agent /var/log/nginx \
+    && mkdir /var/log/nginx \
+    && touch /var/log/nginx/error.log \
+    && chown -R nginx:nginx-agent /var/log/nginx \
+    && chmod -R go+rw /var/log/nginx \
     && mkdir ${INSTALL_PATH}/var/log/nginx-agent/ \
     && touch ${INSTALL_PATH}/var/log/nginx-agent/agent.log \
     && chown -R nginx:nginx-agent ${INSTALL_PATH}/var/log/nginx-agent \
@@ -145,6 +146,7 @@ FROM cleaner as runner
 # Forward request logs to Docker log collector
 RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
   && ln -sf /dev/stderr ${INSTALL_PATH}/var/log/nginx/error.log \
+  && ln -sf /dev/stderr /var/log/nginx/error.log \
   && ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx-agent/agent.log
 
 COPY entrypoint.sh /
