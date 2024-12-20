@@ -1,13 +1,12 @@
-ARG RELEASE=bullseye
-# ARG RELEASE=bookworm
+ARG RELEASE=bookworm
 FROM debian:${RELEASE}-slim as nginx-installer
 
 LABEL maintainer="F5 SE"
 
 # Define NGINX versions for NGINX Plus and NGINX Plus modules
-ARG NGINX_VERSION=33
-ARG NGINX_VERSION_MINOR=2
-ARG NJS_VERSION="0.8.7"
+ARG NGINX_VERSION=28
+ARG NGINX_VERSION_MINOR=1
+ARG NJS_VERSION="0.7.10"
 ARG INSTALL_PATH="/nginx"
 ARG TMP_PATH="/nginx-tmp"
 ARG CACHE_PATH="/nginx-cache"
