@@ -1,5 +1,4 @@
-ARG RELEASE=bullseye
-# ARG RELEASE=bookworm
+ARG RELEASE=bookworm
 FROM debian:${RELEASE}-slim as nginx-installer
 
 LABEL maintainer="F5 SE"
