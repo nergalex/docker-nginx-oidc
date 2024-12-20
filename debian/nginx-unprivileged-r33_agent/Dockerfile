@@ -45,6 +45,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
                         gettext-base \
                         gnupg2 \
                         debian-archive-keyring \
+                        dnsutils \
     && \
     NGINX_GPGKEYS="573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 8540A6F18833A80E9C1653A42FD21310B49F6B46 9E9BE90EACBCDE69FE9B204CBCDCD8A38D88A2B3"; \
     NGINX_GPGKEY_PATH=/usr/share/keyrings/nginx-archive-keyring.gpg; \
