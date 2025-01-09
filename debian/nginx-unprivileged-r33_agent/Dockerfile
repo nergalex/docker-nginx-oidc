@@ -117,7 +117,7 @@ RUN apt install nginx-agent \
 FROM nginx-agent-installer as nginx-initial-config
 # implement changes required to run NGINX as an unprivileged user
 RUN mkdir -p /nginx-initial-config
-COPY nginx.conf /
+COPY nginx.conf /nginx-initial-config/
 RUN cp ${INSTALL_PATH}/etc/nginx/uwsgi_params /nginx-initial-config/ \
     && cp ${INSTALL_PATH}/etc/nginx/fastcgi_params /nginx-initial-config/ \
     && cp ${INSTALL_PATH}/etc/nginx/mime.types  /nginx-initial-config/ \
