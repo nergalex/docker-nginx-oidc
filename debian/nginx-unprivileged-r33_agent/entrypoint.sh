@@ -2,12 +2,12 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2025.01.09.03 ------"
+echo "------ version 2025.01.09.04 ------"
 
 install_path="/nginx"
 
 # copy initial file to the empy volume, in case of being empty
-cp -p --no-clobber /nginx-initial-config ${install_path}/etc/nginx
+cp -pr --no-clobber /nginx-initial-config ${install_path}/etc/nginx
 
 handle_term()
 {
