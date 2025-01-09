@@ -93,25 +93,9 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mkdir -p $INSTALL_PATH \
     && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm
 
-FROM nginx-installer as nginx-config-update
-# implement changes required to run NGINX as an unprivileged user
-RUN sed -i "s,listen       80;,listen       8080;," ${INSTALL_PATH}/etc/nginx/conf.d/default.conf \
-    && sed -i "/user  nginx;/d" ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,.*/var/run/nginx.pid;,pid ${TMP_PATH}/nginx.pid;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,proxy_temp_path.*,proxy_temp_path ${CACHE_PATH}/proxy_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,client_body_temp_path.*,client_body_temp_path ${CACHE_PATH}/client_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,fastcgi_temp_path.*,fastcgi_temp_path ${CACHE_PATH}/fastcgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,uwsgi_temp_path.*,uwsgi_temp_path ${CACHE_PATH}/uwsgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,scgi_temp_path.*,scgi_temp_path ${CACHE_PATH}/scgi_temp;," ${INSTALL_PATH}/etc/nginx/nginx.conf \
-    && sed -i "s,.*uuid_file.*,mgmt { state_path ${INSTALL_PATH}/var/lib/nginx/state; }," ${INSTALL_PATH}/etc/nginx/nginx.conf
-
-FROM nginx-config-update as nginx-agent-installer
+FROM nginx-installer as nginx-agent-installer
 # Install nginx-agent
 RUN apt install nginx-agent \
-    && mkdir -p /nginx-initial-config \
-    && cp -R ${INSTALL_PATH}/etc/nginx/* /nginx-initial-config/ \
-    && chmod -R go+rw /nginx-initial-config/ \
-    && chown -R nginx:nginx-agent /nginx-initial-config/ \
     && usermod -a -G nginx-agent nginx \
     && chown -R nginx:nginx-agent ${INSTALL_PATH} \
     && chmod -R go+rw ${INSTALL_PATH} \
@@ -130,7 +114,18 @@ RUN apt install nginx-agent \
     && chown -R nginx:nginx-agent ${INSTALL_PATH}/var/log/nginx-agent \
     && chmod -R g+rw ${INSTALL_PATH}/var/log/nginx-agent
 
-FROM nginx-agent-installer as cleaner
+FROM nginx-agent-installer as nginx-initial-config
+# implement changes required to run NGINX as an unprivileged user
+RUN mkdir -p /nginx-initial-config
+COPY nginx.conf /
+RUN cp ${INSTALL_PATH}/etc/nginx/uwsgi_params /nginx-initial-config/ \
+    && cp ${INSTALL_PATH}/etc/nginx/fastcgi_params /nginx-initial-config/ \
+    && cp ${INSTALL_PATH}/etc/nginx/mime.types  /nginx-initial-config/ \
+    && cp ${INSTALL_PATH}/etc/nginx/scgi_params /nginx-initial-config/ \
+    && chmod -R go+rw /nginx-initial-config/ \
+    && chown -R nginx:nginx-agent /nginx-initial-config/
+
+FROM nginx-initial-config as cleaner
 # cleanup sensitive nginx-plus data
 RUN apt-get autoremove --purge -y \
       gnupg \
