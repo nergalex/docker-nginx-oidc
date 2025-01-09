@@ -2,7 +2,7 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2025.01.09.05 ------"
+echo "------ version 2025.01.09.06 ------"
 
 install_path="/nginx"
 
