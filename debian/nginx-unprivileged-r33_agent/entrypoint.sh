@@ -2,7 +2,7 @@
 #
 # This script launches nginx and nginx-agent.
 #
-echo "------ version 2025.01.09.06 ------"
+echo "------ version 2025.01.11.01 ------"
 
 install_path="/nginx"
 
@@ -11,7 +11,7 @@ cp -p --no-clobber /nginx-initial-config/* ${install_path}/etc/nginx/
 
 handle_term()
 {
-    echo "`date +%H:%M:%S:%N`: received TERM signal"
+    echo "$(date +%H:%M:%S:%N): received TERM signal"
     # stopping nginx ...
     kill -TERM "${nginx_pid}" 2>/dev/null
 }
@@ -49,17 +49,12 @@ wait_term()
 {
     wait ${nginx_pid}
     trap '' EXIT INT TERM
-    echo "`date +%H:%M:%S:%N`: nginx stopped"
+    echo "$(date +%H:%M:%S:%N): nginx stopped"
     # stopping nginx-agent ...
     kill -QUIT "${agent_pid}" 2>/dev/null
-    echo "`date +%H:%M:%S:%N`: nginx-agent stopped..."
-    # echo "`date +%H:%M:%S:%N`: waiting for NGINX One to set the instance Offline..."
-    export XC_API_KEY
-    export XC_TENANT
-    sh remove.sh
-    echo "`date +%H:%M:%S:%N`: nginx-agent unregistered"
+    echo "$(date +%H:%M:%S:%N): nginx-agent stopped..."
 }
 
 wait_term
-echo "`date`:exiting."
+echo "$(date +%H:%M:%S:%N):exiting."
 sleep 30
