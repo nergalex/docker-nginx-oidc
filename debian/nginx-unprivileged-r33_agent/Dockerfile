@@ -145,7 +145,6 @@ RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
   && ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx-agent/agent.log
 
 COPY entrypoint.sh /
-COPY remove.sh /
 
 EXPOSE 8000
 EXPOSE 4443
