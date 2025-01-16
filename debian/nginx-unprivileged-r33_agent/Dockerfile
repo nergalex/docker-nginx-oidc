@@ -146,8 +146,12 @@ RUN ln -sf /dev/stdout ${INSTALL_PATH}/var/log/nginx/access.log \
 
 COPY entrypoint.sh /
 
+# NGINX OIDC GW
 EXPOSE 8000
 EXPOSE 4443
+# NGINX JWT VALIDATION GW
+EXPOSE 8001
+EXPOSE 5443
 # NGINX API
 EXPOSE 8080
 # NGINX-agent API
