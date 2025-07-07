@@ -92,6 +92,8 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mv nginx-plus-module-njs_${NGINX_VERSION}%2B${NJS_VERSION}-* nginx-plus-module-njs.rpm \
     && mv nginx-plus-module-subs-filter_${NGINX_VERSION}* nginx-plus-module-subs-filter.rpm \
     && mkdir -p $INSTALL_PATH \
+    && cat license.jwt > /license.jwt \
+    && chmod 777 /license.jwt \
     && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm -j /license.jwt
 
 FROM nginx-installer as nginx-agent-installer
@@ -136,7 +138,8 @@ RUN apt-get autoremove --purge -y \
   && rm -rf "${tempDir}" \
   && apt-get remove --purge -y lsb-release \
   && apt-get remove --purge --auto-remove -y && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx-plus.list \
-  && rm -rf /etc/apt/apt.conf.d/90nginx /etc/ssl/nginx
+  && rm -rf /etc/apt/apt.conf.d/90nginx /etc/ssl/nginx \
+  && rm -f /license.jwt
 
 FROM cleaner as runner
 # Forward request logs to Docker log collector
