@@ -94,7 +94,7 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mkdir -p $INSTALL_PATH \
     && cat license.jwt > /license.jwt \
     && chmod 777 /license.jwt \
-    && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm -j /license.jwt
+    && ./ngxunprivinst.sh install -y -j /license.jwt -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm
 
 FROM nginx-installer as nginx-agent-installer
 # Install nginx-agent
