@@ -93,7 +93,6 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mv nginx-plus-module-subs-filter_${NGINX_VERSION}* nginx-plus-module-subs-filter.rpm \
     && mkdir -p $INSTALL_PATH \
     && cat license.jwt > /license.jwt \
-    && chmod 777 /license.jwt \
     && ./ngxunprivinst.sh install -y -j /license.jwt -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm
 
 FROM nginx-installer as nginx-agent-installer
