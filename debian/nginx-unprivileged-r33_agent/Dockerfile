@@ -15,7 +15,7 @@ ARG CACHE_PATH="/nginx-cache"
 # and copy to the build context
 RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     --mount=type=secret,id=nginx-key,dst=nginx-repo.key \
-    --mount=type=secret,id=nginx-lic,dst=nginx=license.jwt \
+    --mount=type=secret,id=nginx-lic,dst=license.jwt \
     set -x \
     \
 # create nginx user/group first, to be consistent throughout docker variants
