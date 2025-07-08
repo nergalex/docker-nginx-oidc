@@ -15,6 +15,7 @@ ARG CACHE_PATH="/nginx-cache"
 # and copy to the build context
 RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     --mount=type=secret,id=nginx-key,dst=nginx-repo.key \
+    --mount=type=secret,id=nginx-lic,dst=license.jwt \
     set -x \
     \
 # create nginx user/group first, to be consistent throughout docker variants
@@ -86,7 +87,8 @@ RUN --mount=type=secret,id=nginx-crt,dst=nginx-repo.crt \
     && mv nginx-plus-module-njs_${NGINX_VERSION}%2B${NJS_VERSION}-* nginx-plus-module-njs.rpm \
     && mv nginx-plus-module-subs-filter_${NGINX_VERSION}* nginx-plus-module-subs-filter.rpm \
     && mkdir -p $INSTALL_PATH \
-    && ./ngxunprivinst.sh install -y -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm \
+    && cat license.jwt > /license.jwt \
+    && ./ngxunprivinst.sh install -y -j /license.jwt -p $INSTALL_PATH nginx-plus.rpm nginx-plus-module-brotli.rpm nginx-plus-module-njs.rpm nginx-plus-module-subs-filter.rpm \
     && chown -R nginx:nginx $INSTALL_PATH \
     && chmod -R g+w $INSTALL_PATH/etc/nginx \
     && sudo mkdir /var/log/nginx \
